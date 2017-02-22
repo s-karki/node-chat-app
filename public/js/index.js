@@ -7,10 +7,10 @@ console.log("Connected to server");
 //As soon as the connection happens, the client prints this statement in the console, and the server prints its statement in its console. Cool!
 
 //fire custom event (client to server)
-socket.emit("createMessage", {
-    from: "User",
-    text: "IamAMessage"
-});
+// socket.emit("createMessage", {
+//     from: "User",
+//     text: "IamAMessage"
+// });
 
 socket.on("disconnect", function() {
     console.log("Disconnected from the server");

@@ -17,16 +17,21 @@ app.use(express.static(publicPath));
 io.on('connection', (socket)=>{ //register an event listener (listen for a new connection).
     console.log("User connected");
 
-    socket.emit("newMessage", {
-        from: "userFrom",
-        text: "Message",
-        createdAt: 5000
-    });//fire a custom event
+    // socket.emit("newMessage", {
+    //     from: "userFrom",
+    //     text: "Message",
+    //     createdAt: 5000
+    // });//fire a custom event
 
 
     socket.on("createMessage", (message) => {
         console.log(message);
-    }); //listen for a custom event
+        io.emit("newMessage", {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
+    }); //listen for a custom event (msg), and emit it to every user
 
     socket.on("disconnect", () => console.log("Client disconnected")); //print statement is user disconnected
 });  
