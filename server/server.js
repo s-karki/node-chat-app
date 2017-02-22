@@ -17,21 +17,31 @@ app.use(express.static(publicPath));
 io.on('connection', (socket)=>{ //register an event listener (listen for a new connection).
     console.log("User connected");
 
-    // socket.emit("newMessage", {
-    //     from: "userFrom",
-    //     text: "Message",
-    //     createdAt: 5000
-    // });//fire a custom event
+    //broadcast to only this socket
+   socket.emit("newUser", {
+    from: "admin",
+    text: "Welcome to the Chat App!",
+    createdAt: new Date().getTime()
+   });
+
+    //broadcast to everybody but this socket
+   socket.broadcast.emit("newUser", {
+    from: "admin",
+    text: "A new user has joined.",
+    createdAt: new Date().getTime()
+   });
 
 
-    socket.on("createMessage", (message) => {
+    socket.on("createMessage", (message) => { //listen for a custom event (msg), and emit it to every user
         console.log(message);
+
+        //emit to all users
         io.emit("newMessage", {
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
         });
-    }); //listen for a custom event (msg), and emit it to every user
+    }); 
 
     socket.on("disconnect", () => console.log("Client disconnected")); //print statement is user disconnected
 });  
