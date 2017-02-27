@@ -5,6 +5,7 @@ const http = require("http");
 
 const express = require("express");
 const port = process.env.PORT || 3000; 
+const {generateMessage} = require("./utils/message");
 
 var app = express();
 var server = http.createServer(app); //config server to use SocketIO
@@ -18,29 +19,17 @@ io.on('connection', (socket)=>{ //register an event listener (listen for a new c
     console.log("User connected");
 
     //broadcast to only this socket
-   socket.emit("newUser", {
-    from: "admin",
-    text: "Welcome to the Chat App!",
-    createdAt: new Date().getTime()
-   });
+   socket.emit("newUser", generateMessage("admin", "Welcome to the Chat App."));
 
     //broadcast to everybody but this socket
-   socket.broadcast.emit("newUser", {
-    from: "admin",
-    text: "A new user has joined.",
-    createdAt: new Date().getTime()
-   });
+   socket.broadcast.emit("newUser", generateMessage("admin", "A new user has joined."));
 
 
     socket.on("createMessage", (message) => { //listen for a custom event (msg), and emit it to every user
         console.log(message);
 
         //emit to all users
-        io.emit("newMessage", {
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()
-        });
+        io.emit("newMessage", generateMessage(message.from, message.text));
     }); 
 
     socket.on("disconnect", () => console.log("Client disconnected")); //print statement is user disconnected
