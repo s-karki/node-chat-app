@@ -19,21 +19,26 @@ io.on('connection', (socket)=>{ //register an event listener (listen for a new c
     console.log("User connected");
 
     //broadcast to only this socket
-   socket.emit("newUser", generateMessage("admin", "Welcome to the Chat App."));
+   socket.emit("newMessage", generateMessage("admin", "Welcome to the Chat App."));
 
     //broadcast to everybody but this socket
-   socket.broadcast.emit("newUser", generateMessage("admin", "A new user has joined."));
+   socket.broadcast.emit("newMessage", generateMessage("admin", "A new user has joined."));
 
 
-    socket.on("createMessage", (message) => { //listen for a custom event (msg), and emit it to every user
+    socket.on("createMessage", (message, callback) => { //listen for a custom event (msg)
         console.log(message);
 
-        //emit to all users
-        io.emit("newMessage", generateMessage(message.from, message.text));
+        io.emit("newMessage", generateMessage(message.from, message.text));   //emit the message to all users
+
+        callback("This is from the server.");
+
     }); 
+
 
     socket.on("disconnect", () => console.log("Client disconnected")); //print statement is user disconnected
 });  
+
+
 //Connections are persistent; the client will try to reconnect. 
 //Instant two-way connections become easy!
 
