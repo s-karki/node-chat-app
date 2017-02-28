@@ -5,7 +5,7 @@ const http = require("http");
 
 const express = require("express");
 const port = process.env.PORT || 3000; 
-const {generateMessage} = require("./utils/message");
+const {generateMessage, generateLocationMessage} = require("./utils/message");
 
 var app = express();
 var server = http.createServer(app); //config server to use SocketIO
@@ -27,12 +27,15 @@ io.on('connection', (socket)=>{ //register an event listener (listen for a new c
 
     socket.on("createMessage", (message, callback) => { //listen for a custom event (msg)
         console.log(message);
-
         io.emit("newMessage", generateMessage(message.from, message.text));   //emit the message to all users
-
         callback("This is from the server.");
 
     }); 
+
+    socket.on("createLocationMessage", (coords) => {
+        io.emit("newLocationMessage", generateLocationMessage("User", coords.latitude, coords.longitude));
+
+    });
 
 
     socket.on("disconnect", () => console.log("Client disconnected")); //print statement is user disconnected
