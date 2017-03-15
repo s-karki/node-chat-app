@@ -16,13 +16,16 @@ socket.on("disconnect", function () {
 
 //custom event listener (event fired by server)
 socket.on("newMessage", function (message) {
-    var formattedTime = moment(message.createdAt).format("h:mm a");
-    console.log(message);
-    var li = jQuery("<li></li>");
-    li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
-    //render to DOM
-    jQuery("#messages").append(li);
+    var formattedTime = moment(message.createdAt).format("h:mm a");
+    var template = jQuery("#message-template").html(); //script tag is a template in index.html
+    var html = Mustache.render(template, {
+        text: message.text,
+        createdAt: formattedTime,
+        from: message.from
+    });
+    jQuery("#messages").append(html);
+
 
 });
 
@@ -32,15 +35,14 @@ socket.on("newUser", function (message) {
 
 socket.on("newLocationMessage", function (message) {
     var formattedTime = moment(message.createdAt).format("h:mm a");
+    var template = jQuery("#location-message-template").html(); //template for location messages
+    var html = Mustache.render(template, {
+        url: message.url,
+        createdAt: formattedTime,
+        from: message.from
+    }); //render sends over the data to the template, and injects it in the right position (dictated by key)
 
-    var li = jQuery("<li></li>");
-    var a = jQuery("<a target='_blank'>I am here.</a>"); //open link in a new tab (this is an anchor tag template)
-    
-    li.text(`${message.from} ${formattedTime}: `);
-    a.attr("href", message.url);
-    li.append(a);
-
-    jQuery("#messages").append(li);
+    jQuery("#messages").append(html);
 
 });
 
