@@ -16,9 +16,10 @@ socket.on("disconnect", function () {
 
 //custom event listener (event fired by server)
 socket.on("newMessage", function (message) {
+    var formattedTime = moment(message.createdAt).format("h:mm a");
     console.log(message);
     var li = jQuery("<li></li>");
-    li.text(`${message.from}: ${message.text}`);
+    li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
     //render to DOM
     jQuery("#messages").append(li);
@@ -30,11 +31,12 @@ socket.on("newUser", function (message) {
 });
 
 socket.on("newLocationMessage", function (message) {
-    var li = jQuery("<li></li>");
+    var formattedTime = moment(message.createdAt).format("h:mm a");
 
+    var li = jQuery("<li></li>");
     var a = jQuery("<a target='_blank'>I am here.</a>"); //open link in a new tab (this is an anchor tag template)
     
-    li.text(`${message.from}: `);
+    li.text(`${message.from} ${formattedTime}: `);
     a.attr("href", message.url);
     li.append(a);
 

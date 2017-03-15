@@ -1,4 +1,5 @@
 const expect = require("expect");
+const moment = require("moment");
 const {generateMessage, generateLocationMessage} = require("./message");
 
 
@@ -9,11 +10,12 @@ describe("generateMessage", () => {
         var text = "Sample message";
         var message = generateMessage(from, text);
 
-        expect(message).toEqual({
+        expect(message).toContain({
             from,
             text,
-            createdAt: new Date().getTime()
         });
+
+        expect(message.createdAt).toBeA("number");
     });
 });
 

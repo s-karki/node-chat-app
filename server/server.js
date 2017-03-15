@@ -7,6 +7,7 @@ const express = require("express");
 const port = process.env.PORT || 3000; 
 const {generateMessage, generateLocationMessage} = require("./utils/message");
 
+
 var app = express();
 var server = http.createServer(app); //config server to use SocketIO
 var io = socketIO(server); //adds client-side JS
