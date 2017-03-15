@@ -1,7 +1,23 @@
 //client side 
 var socket = io(); //init request and keep connection open
 
+function scrolltoBottom () {
+    //Selectors
+    var messages = jQuery("#messages");
+    var newMessage = messages.children("li:last-child"); //last list item in a list
 
+    //Heights
+    var clientHeight = messages.prop('clientHeight'); //getting a property
+    var scrollTop = messages.prop("scrollTop");
+    var scrollHeight = messages.prop("scrollHeight");
+    var newMessageHeight = newMessage.innerHeight(); 
+    var lastMessageHeight = newMessage.prev().innerHeight(); //height of the previous child
+
+
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+        messages.scrollTop(scrollHeight);
+    }
+};
 
 socket.on('connect', function ()  {
 console.log("Connected to server");
@@ -25,8 +41,7 @@ socket.on("newMessage", function (message) {
         from: message.from
     });
     jQuery("#messages").append(html);
-
-
+    scrolltoBottom();
 });
 
 socket.on("newUser", function (message) {
@@ -43,7 +58,7 @@ socket.on("newLocationMessage", function (message) {
     }); //render sends over the data to the template, and injects it in the right position (dictated by key)
 
     jQuery("#messages").append(html);
-
+    scrolltoBottom();
 });
 
 var messageTextBox = jQuery('[name=message]');
