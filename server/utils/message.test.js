@@ -31,7 +31,5 @@ describe("generateLocationMessage", () => {
 
         expect(location.url).toEqual("https://www.google.com/maps?q=100,200");
         expect(location.createdAt).toBeA("number");
-
-
     });
 });

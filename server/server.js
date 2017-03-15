@@ -28,7 +28,7 @@ io.on('connection', (socket)=>{ //register an event listener (listen for a new c
     socket.on("createMessage", (message, callback) => { //listen for a custom event (msg)
         console.log(message);
         io.emit("newMessage", generateMessage(message.from, message.text));   //emit the message to all users
-        callback("This is from the server.");
+        callback();
 
     }); 
 
